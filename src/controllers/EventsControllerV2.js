@@ -2,6 +2,7 @@
 
 import type { Event, EventData } from '../types';
 import type EventManager from '../managers/EventManager';
+import type DeviceManager from '../managers/DeviceManager';
 
 import Controller from './Controller';
 import anonymous from '../decorators/anonymous';
@@ -109,7 +110,7 @@ class EventsControllerV2 extends Controller {
     return this.ok({ ok: true });
   }
 
-  _closeStream(subscriptionID: string, keepAliveIntervalID: number): void {
+  _closeStream(subscriptionID: string, keepAliveIntervalID: IntervalID): void {
     const closeStreamHandler = () => {
       this._eventManager.unsubscribe(subscriptionID);
       clearInterval(keepAliveIntervalID);
@@ -125,7 +126,7 @@ class EventsControllerV2 extends Controller {
     return this.user.role === 'administrator' ? {} : { userID: this.user.id };
   }
 
-  _startKeepAlive(): number {
+  _startKeepAlive(): IntervalID {
     this._updateLastEventDate();
 
     return setInterval(() => {

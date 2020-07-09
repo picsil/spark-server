@@ -7,3 +7,11 @@
 [options]
 esproposal.decorators=ignore
 esproposal.class_instance_fields=enable
+
+[strict]
+nonstrict-import
+unclear-type
+unsafe-getters-setters
+untyped-import
+untyped-type-import
+sketchy-null

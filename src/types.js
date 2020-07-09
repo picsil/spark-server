@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable */
 
-import type { File } from 'express';
+import type File from 'File';
 import bunyan from 'bunyan';
 
 export type Webhook = {

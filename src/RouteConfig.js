@@ -194,7 +194,7 @@ export default (
   });
 
   (app: any).use((
-    error: Error,
+    error: Error | {| code: number |},
     request: $Request,
     response: $Response,
     // eslint-disable-next-line no-unused-vars

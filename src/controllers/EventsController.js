@@ -49,8 +49,7 @@ class EventsController extends Controller {
     );
     const keepAliveIntervalID = this._startKeepAlive();
 
-    await this._closeStream(subscriptionID, keepAliveIntervalID);
-    return this.ok();
+    this._closeStream(subscriptionID, keepAliveIntervalID);
   }
 
   @httpVerb('get')
@@ -67,8 +66,7 @@ class EventsController extends Controller {
     );
     const keepAliveIntervalID = this._startKeepAlive();
 
-    await this._closeStream(subscriptionID, keepAliveIntervalID);
-    return this.ok();
+    this._closeStream(subscriptionID, keepAliveIntervalID);
   }
 
   @httpVerb('get')
@@ -89,8 +87,7 @@ class EventsController extends Controller {
     );
     const keepAliveIntervalID = this._startKeepAlive();
 
-    await this._closeStream(subscriptionID, keepAliveIntervalID);
-    return this.ok();
+    this._closeStream(subscriptionID, keepAliveIntervalID);
   }
 
   @httpVerb('post')
@@ -113,29 +110,23 @@ class EventsController extends Controller {
     return this.ok({ ok: true });
   }
 
-  _closeStream(
-    subscriptionID: string,
-    keepAliveIntervalID: number,
-  ): Promise<void> {
-    return new Promise((resolve: () => void) => {
-      const closeStreamHandler = () => {
-        this._eventManager.unsubscribe(subscriptionID);
-        clearInterval(keepAliveIntervalID);
-        resolve();
-      };
+  _closeStream(subscriptionID: string, keepAliveIntervalID: IntervalID): void {
+    const closeStreamHandler = () => {
+      this._eventManager.unsubscribe(subscriptionID);
+      clearInterval(keepAliveIntervalID);
+    };
 
-      this.request.on('close', closeStreamHandler);
-      this.request.on('end', closeStreamHandler);
-      this.response.on('finish', closeStreamHandler);
-      this.response.on('end', closeStreamHandler);
-    });
+    this.request.on('close', closeStreamHandler);
+    this.request.on('end', closeStreamHandler);
+    this.response.on('finish', closeStreamHandler);
+    this.response.on('end', closeStreamHandler);
   }
 
   _getUserFilter(): Object {
     return this.user.role === 'administrator' ? {} : { userID: this.user.id };
   }
 
-  _startKeepAlive(): number {
+  _startKeepAlive(): IntervalID {
     return setInterval(() => {
       if (new Date() - this._lastEventDate >= KEEP_ALIVE_INTERVAL) {
         this.response.write('\n');
@@ -146,7 +137,7 @@ class EventsController extends Controller {
 
   _pipeEvent(event: Event) {
     try {
-      this.response.write(`event: ${event.name}\n`);
+      this.response.write(`event: ${event.name || ''}\n`);
       this.response.write(`data: ${JSON.stringify(eventToApi(event))}\n\n`);
       this._updateLastEventDate();
     } catch (error) {

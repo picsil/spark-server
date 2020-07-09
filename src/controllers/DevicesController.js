@@ -1,7 +1,6 @@
 // @flow
 
 import type DeviceManager from '../managers/DeviceManager';
-import type { File } from 'express';
 import type { Device } from '../types';
 import type { DeviceAPIType } from '../lib/deviceToAPI';
 

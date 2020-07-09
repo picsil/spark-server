@@ -44,7 +44,7 @@ GITHUB_AUTH_TOKEN=<github-token>
 ```
 
 ```
-npm install
+yarn install
 ```
 
 _At this point we will be setting up the server. You should change the default username + password in ./dist/settings.js_
@@ -52,7 +52,7 @@ _At this point we will be setting up the server. You should change the default u
 The babel command pre-processes all the src/ to allow modern node
 syntax to be used in older versions of node. The modified code that is
 actually running lives in dist/
-If you change anything in src/ you'll need to rerun `npm build` for changes
+If you change anything in src/ you'll need to rerun `yarn build` for changes
 to take effect.
 
 [Raspberry pi Quick Install](raspberryPi.md)
@@ -63,13 +63,13 @@ to take effect.
    Run with babel (useful for local development)
 
 ```
-npm start
+yarn start
 ```
 
 For production - uses transpiled files from babel.
 
 ```
-npm run start:prod
+yarn run start:prod
 ```
 
 2. Watch for your IP address, you'll see something like:
@@ -97,12 +97,13 @@ particle config profile_name
 5. On a separate CMD from the one running the server, type
 
 ```
-particle login cloud
+particle login --username __admin__ --password adminPassword
 ```
 
 The default username is `__admin__` and password is `adminPassword`.
 
 This will create an account on the local cloud
+*This creates a config file located in the `%userprofile%/.particle%` folder*
 
 Perform CTRL + C once you logon with Particle-CLI asking you to send Wifi-credentials etc...
 
@@ -116,19 +117,31 @@ to get your core id. You'll need this id later
 
 7. The next steps will generate a bunch of keys for your device. I recommend `mkdir ..\temp` and `cd ..\temp`
 
-8. Change server keys to local cloud key + IP Address
+8. Put your device in DFU mode.
+
+9. Change server keys to local cloud key + IP Address
 
 ```
-particle keys server ..\spark-server\data\default_key.pub.pem --host IP_ADDRESS
+particle keys server ..\spark-server\data\default_key.pub.pem --host IP_ADDRESS --protocol tcp
 ```
 
 **Note You can go back to using the particle cloud by [downloading the public key here](https://s3.amazonaws.com/spark-website/cloud_public.der).**
 You'll need to run `particle config particle`, `particle keys server cloud_public.der`, and `particle keys doctor your_core_id` while your device is in DFU mode.
 
-9. Create and provision access on your local cloud with the keys doctor:
+10. Create and provision access on your local cloud with the keys doctor:
 
 ```
    particle keys doctor your_core_id
+```
+
+**Note For Electrons and probably all newer hardware you need to run these commands**
+There is either a bug in the CLI or Particle always expects these newer devices to use UDP.
+
+Put your device in DFU mode and then:
+```
+particle keys new test_key --protocol tcp
+particle keys load test_key.der
+particle keys send XXXXXXXXXXXXXXXXXXXXXXXX test_key.pub.pem
 ```
 
 ---

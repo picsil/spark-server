@@ -35,7 +35,8 @@ exports.default = {
     USE_SSL: false
   },
   DB_CONFIG: {
-    PATH: _path2.default.join(process.cwd(), 'data/db')
+    PATH: _path2.default.join(process.cwd(), 'data/db'),
+    URL: null
   },
   SHOW_VERBOSE_DEVICE_LOGS: false,
 

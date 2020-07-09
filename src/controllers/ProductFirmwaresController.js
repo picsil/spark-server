@@ -2,6 +2,7 @@
 
 import type DeviceManager from '../managers/DeviceManager';
 import type {
+  IProductDeviceRepository,
   IProductFirmwareRepository,
   IProductRepository,
   ProductFirmware,

@@ -47,6 +47,7 @@ export default {
   },
   DB_CONFIG: {
     PATH: path.join(process.cwd(), 'data/db'),
+    URL: null,
   },
   SHOW_VERBOSE_DEVICE_LOGS: false,
 

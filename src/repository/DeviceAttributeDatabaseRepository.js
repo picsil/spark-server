@@ -5,6 +5,7 @@ import type {
   DeviceAttributes,
   IBaseDatabase,
   IDeviceAttributeRepository,
+  IProductDeviceRepository,
 } from '../types';
 
 import COLLECTION_NAMES from './collectionNames';

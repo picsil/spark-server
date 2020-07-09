@@ -12,10 +12,6 @@ var _stringify = require('babel-runtime/core-js/json/stringify');
 
 var _stringify2 = _interopRequireDefault(_stringify);
 
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
 var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
@@ -173,13 +169,11 @@ var EventsController = (_dec = (0, _httpVerb2.default)('post'), _dec2 = (0, _rou
               case 0:
                 subscriptionID = (_eventManager = this._eventManager).subscribe.apply(_eventManager, [eventNamePrefix, this._pipeEvent.bind(this)].concat((0, _toConsumableArray3.default)(this._getUserFilter())));
                 keepAliveIntervalID = this._startKeepAlive();
-                _context2.next = 4;
-                return this._closeStream(subscriptionID, keepAliveIntervalID);
 
-              case 4:
-                return _context2.abrupt('return', this.ok());
 
-              case 5:
+                this._closeStream(subscriptionID, keepAliveIntervalID);
+
+              case 3:
               case 'end':
                 return _context2.stop();
             }
@@ -206,13 +200,11 @@ var EventsController = (_dec = (0, _httpVerb2.default)('post'), _dec2 = (0, _rou
                   mydevices: true
                 }, this._getUserFilter()));
                 keepAliveIntervalID = this._startKeepAlive();
-                _context3.next = 4;
-                return this._closeStream(subscriptionID, keepAliveIntervalID);
 
-              case 4:
-                return _context3.abrupt('return', this.ok());
 
-              case 5:
+                this._closeStream(subscriptionID, keepAliveIntervalID);
+
+              case 3:
               case 'end':
                 return _context3.stop();
             }
@@ -244,13 +236,11 @@ var EventsController = (_dec = (0, _httpVerb2.default)('post'), _dec2 = (0, _rou
                   deviceID: deviceID
                 }, this._getUserFilter()));
                 keepAliveIntervalID = this._startKeepAlive();
-                _context4.next = 7;
-                return this._closeStream(subscriptionID, keepAliveIntervalID);
 
-              case 7:
-                return _context4.abrupt('return', this.ok());
 
-              case 8:
+                this._closeStream(subscriptionID, keepAliveIntervalID);
+
+              case 6:
               case 'end':
                 return _context4.stop();
             }
@@ -303,18 +293,15 @@ var EventsController = (_dec = (0, _httpVerb2.default)('post'), _dec2 = (0, _rou
     value: function _closeStream(subscriptionID, keepAliveIntervalID) {
       var _this2 = this;
 
-      return new _promise2.default(function (resolve) {
-        var closeStreamHandler = function closeStreamHandler() {
-          _this2._eventManager.unsubscribe(subscriptionID);
-          clearInterval(keepAliveIntervalID);
-          resolve();
-        };
+      var closeStreamHandler = function closeStreamHandler() {
+        _this2._eventManager.unsubscribe(subscriptionID);
+        clearInterval(keepAliveIntervalID);
+      };
 
-        _this2.request.on('close', closeStreamHandler);
-        _this2.request.on('end', closeStreamHandler);
-        _this2.response.on('finish', closeStreamHandler);
-        _this2.response.on('end', closeStreamHandler);
-      });
+      this.request.on('close', closeStreamHandler);
+      this.request.on('end', closeStreamHandler);
+      this.response.on('finish', closeStreamHandler);
+      this.response.on('end', closeStreamHandler);
     }
   }, {
     key: '_getUserFilter',
@@ -337,7 +324,7 @@ var EventsController = (_dec = (0, _httpVerb2.default)('post'), _dec2 = (0, _rou
     key: '_pipeEvent',
     value: function _pipeEvent(event) {
       try {
-        this.response.write('event: ' + event.name + '\n');
+        this.response.write('event: ' + (event.name || '') + '\n');
         this.response.write('data: ' + (0, _stringify2.default)((0, _eventToApi2.default)(event)) + '\n\n');
         this._updateLastEventDate();
       } catch (error) {
